@@ -1,0 +1,21 @@
+name: Hello Earth Hello Mars!
+
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  hello_earth:
+    runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, 'earth')"
+    steps:
+      - run: echo people of earth how are you
+  hello_mars:
+    runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, 'mars')"
+    steps:
+      - run: echo grok with me my martian friends
+  

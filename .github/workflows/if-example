@@ -1,0 +1,53 @@
+name: Example Workflow with if Conditionals
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  conditional-job:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Always runs
+        run: echo "This step always runs"
+
+      - name: Only runs on main branch
+        if: github.ref == 'refs/heads/main'
+        run: echo "This is the main branch"
+
+      - name: Only runs on pull_request
+        if: github.event_name == 'pull_request'
+        run: echo "This is a pull request"
+
+      - name: Only runs if a specific file is changed
+        if: contains(github.event.head_commit.message, 'README')
+        run: echo "The commit message mentions README"
+
+      - name: Runs if previous step succeeded
+        if: success()
+        run: echo "Previous step was successful"
+
+      - name: Runs if previous step failed
+        if: failure()
+        run: echo "Previous step failed"
+
+      - name: Runs on weekends
+        if: startsWith(github.event.head_commit.timestamp, '2025-06-21') || startsWith(github.event.head_commit.timestamp, '2025-06-22')
+        run: echo "This commit was made on the weekend"
+
+      - name: Runs only if actor is a specific user
+        if: github.actor == 'octocat'
+        run: echo "This workflow was triggered by octocat"
+
+      - name: Runs only on push (not pull request)
+        if: github.event_name == 'push'
+        run: echo "Triggered by a push"
+
+      - name: Runs only if an environment variable is set
+        if: env.MY_FLAG == 'true'
+        run: echo "MY_FLAG is set to true"
+        env:
+          MY_FLAG: ${{ secrets.MY_FLAG }}
